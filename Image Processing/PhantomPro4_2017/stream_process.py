@@ -6,7 +6,7 @@ Video Stream Processing
 Processing the aerial stream from camera
 
 Usage:
-    video.py  [source0] [source1] ...'
+    stream_process.py  [source0] [source1] ...'
 
     sourceN is an
      - integer number for camera capture
