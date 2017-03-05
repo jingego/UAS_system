@@ -10,7 +10,8 @@ Terminal on Linux/Ubuntu, run
 
 ```sh
 python stream_process.py [source0]
-'''
+```
+
 sourceN is an
      - integer number for camera capture
      - leave none will treat the source as cam 1
