@@ -25,7 +25,7 @@ import numpy as np
 from numpy import pi, sin, cos
 
 import cv2, sys
-
+from shutil import copyfile
 # built-in modules
 from time import clock
 
@@ -58,6 +58,7 @@ save_img_quality = 100
 ## save image path
 ##   this path MUST EXIST before using!!! otherwise images cannot be saved
 img_path = "./frame_with_target/"
+GotTargetPath='./IGotTarget/'
 exit_flag=0
 
 ## counting frames with target
@@ -125,6 +126,7 @@ if __name__ == '__main__':
     shot_idx = 0
     ProcessFlag =0
     WaitFlag = 1
+    StopTagetCopyCnt = 4
     cv2.namedWindow('frame',cv2.WINDOW_KEEPRATIO)
     cv2.resizeWindow('frame',900,600)
     print('*****[Status:] Previewing the Stream... *****')
@@ -137,15 +139,10 @@ if __name__ == '__main__':
         ch = cv2.waitKey(1)
         if ch == 27:
             break
-        if ch == ord(' '):
-            for i, img in enumerate(imgs):
-                fn = '%s/shot_%d_%03d.bmp' % (shotdir, i, shot_idx)
-                cv2.imwrite(fn, img)
-                print(fn, 'saved')
-            shot_idx += 1        
         if ch == 13:
         	ProcessFlag=1
         	WaitFlag =0
+        	TargetFlag=0
         	print(line)
         	print('*****[Status:] Started Targets Detecting!*****')
         	
@@ -163,13 +160,25 @@ if __name__ == '__main__':
 	  	ch = cv2.waitKey(1)
 	  	if ch == 27:
 	  		break
+	  	if ch == ord(' '):
+	  		TargetFlag=1
+	  		StopTagetCopyCnt=1
+	  		CopyIndex=str(target_frame_cnt).zfill(max_target_digit)
+	  		dst=GotTargetPath+"target_frame_" + CopyIndex + ".jpg"
+	  		cv2.imwrite(dst,img1)	
+	  		print('\r',dst, 'saved')
+
 	  	if (SkipFlag) and (SkipCount<FrameJumpNumber):
 	  	 	SkipCount=SkipCount+1
 	  	 	continue
 
 	  	SkipCount=1;
 
-	  	img=img1[160:950,325:1560]
+	  	img1[550:600,260:320]=0
+	  	img1[390:450,1560:1660]=0
+	  	img=img1[150:930,230:1690]
+
+	  	#img=img1[160:950,325:1560]
 
 	 	if (VideoRecordFlag):
 	 		videoWriter.write(img1)
@@ -240,6 +249,15 @@ if __name__ == '__main__':
 	  		outstr='\r*****[Status:]     '+ str(target_frame_cnt).zfill(4)+ ' Targets Detected!*****'
 	  		sys.stdout.write(outstr)
 	  		sys.stdout.flush()
+	  	if TargetFlag:
+	  		index=str(target_frame_cnt).zfill(max_target_digit)
+	  		target_img_name= GotTargetPath+'target_frame_'+index+".jpg"
+	  		cv2.imwrite(target_img_name,img1)
+	  		target_frame_cnt=target_frame_cnt+1
+	  		StopTagetCopyCnt=StopTagetCopyCnt+1
+	  	if StopTagetCopyCnt >= 3:
+	  		TargetFlag=0
+
 	  		#print('*****[Status:]     ', target_frame_cnt, ' Targets Detected!*****', end='\r')
 print('\r',line)
 print('\r******************Done***************************')
