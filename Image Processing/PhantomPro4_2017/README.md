@@ -1,11 +1,11 @@
-#Stream Processing Program for DJI Phantom 4 Pro with Litchi
+# Stream Processing Program for DJI Phantom 4 Pro with Litchi  
 This program is developed for Taiwan UAV competition and used to process the live video stream from video transimitter and detect targets. 
 
-##Requirement:
+## Requirement: 
 Python  
 openCv 3.1.0
 
-##Useage
+## Useage
 Terminal on Linux/Ubuntu, run
 
 ```sh
